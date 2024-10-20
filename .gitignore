@@ -163,3 +163,4 @@ cython_debug/
 .settings*
 *.*~
 download_file/
+download_bk/
