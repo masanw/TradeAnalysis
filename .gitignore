@@ -162,8 +162,7 @@ cython_debug/
 # My settings...
 .settings*
 *.*~
-download_file/
-download_bk/
+download_*/
 output*/
 *.txt
 *.json
