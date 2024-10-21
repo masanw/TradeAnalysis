@@ -13,6 +13,11 @@ class Download:
         'GBPUSD': "32", 'EURCHF': "39", 'GBPCHF': "40",
         'USDCHF': "41"
     }
+    C_MAP_PRE2015 = {
+        'USDJPY': "01", 'EURJPY': "02", 'GBPJPY': "03",
+        'AUDJPY': "04", 'NZDJPY': "05", 'CADJPY': "06",
+        'CHFJPY': "07", 'ZARJPY': "09", 'EURUSD': "11"
+    }
 
     @staticmethod
     def session(userid, password, download_dir):
@@ -36,7 +41,11 @@ class Download:
             self.logout()
         def download(self, year, month, pair, to="./"):
             os.makedirs(to, exist_ok=True)
-            url = f"https://tb.click-sec.com/fx/historical/historicalDataDownload.do?y={year}&m={str(month).zfill(2)}&c={Download.C_MAP[pair]}&n={pair}"
+            if year >= 2016:
+                url = f"https://tb.click-sec.com/fx/historical/historicalDataDownload.do?y={year}&m={str(month).zfill(2)}&c={Download.C_MAP[pair]}&n={pair}"
+            else:
+                url = f"https://tb.click-sec.com/fx/historical/historicalDataDownload.do?y={year}&m={str(month).zfill(2)}&c={Download.C_MAP_PRE2015[pair]}&n={pair}"
+
             self.driver.get(url)
             time.sleep(5)  # ダウンロードが完了するのを待つ
         def logout(self):
