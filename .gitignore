@@ -164,4 +164,5 @@ cython_debug/
 *.*~
 download_file/
 download_bk/
-backtest_results.txt
+output/
+*.txt
