@@ -16,7 +16,7 @@ class Download:
     C_MAP_PRE2015 = {
         'USDJPY': "01", 'EURJPY': "02", 'GBPJPY': "03",
         'AUDJPY': "04", 'NZDJPY': "05", 'CADJPY': "06",
-        'CHFJPY': "07", 'ZARJPY': "09", 'EURUSD': "11"
+        'CHFJPY': "07", 'ZARJPY': "08", 'EURUSD': "09"
     }
 
     @staticmethod
