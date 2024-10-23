@@ -11,6 +11,9 @@ DATA_FOLDER = 'download_file'
 CURRENCY_PAIR = 'EURJPY'
 ENCODING = 'shift_jis'
 PARAMS_FILE = 'all_params_' + CURRENCY_PAIR + '.json'
+MARGIN = 0.06
+CASH = 200
+SIZE = 15
 
 def get_available_years(data_folder):
     years = set()
@@ -186,8 +189,9 @@ class MyStrategy(Strategy):
             sl_price = entry_price - self.stop_loss
             tp_price = entry_price + self.take_profit
             
-            if sl_price < entry_price < tp_price:
-                self.buy(size=1, sl=sl_price, tp=tp_price)
+            if ( (sl_price < entry_price < tp_price) 
+                and self.data.index[-1].weekday() != 2 ):   # 0 = 月曜日, 4 = 金曜日
+                self.buy(size=SIZE, sl=sl_price, tp=tp_price)
 
         close_hour = self.close_time // 100
         close_minute = self.close_time % 100
@@ -199,7 +203,7 @@ class MyStrategy(Strategy):
                     self.position.close()
 
 def optimize_strategy(data, entry_time_range, tp_values, sl_values, close_times):
-    bt = Backtest(data, MyStrategy, cash=1000, margin=1, commission=0.000)
+    bt = Backtest(data, MyStrategy, cash=CASH, margin=MARGIN, commission=0.000)
     try:
         stats = bt.optimize(
             entry_time=list(eval(entry_time_range)),
@@ -219,7 +223,7 @@ def backtest_strategy(data, entry_time, take_profit, stop_loss, close_time):
     MyStrategy.stop_loss = float(stop_loss)
     MyStrategy.close_time = int(close_time)
 
-    bt = Backtest(data, MyStrategy, cash=1000, margin=1, commission=0.000)
+    bt = Backtest(data, MyStrategy, cash=CASH, margin=MARGIN, commission=0.000)
     stats = bt.run()
     return stats
 
@@ -272,6 +276,8 @@ def process_data(data, mode, backtest_params, optimize_params, period):
                     print(f"Best result for {CURRENCY_PAIR} {period}:", file=file)
                     print(best_stats.to_string(), file=file)
                     print(best_stats['_strategy'], file=file)
+                    print(f'Optimize parameters :',file=file)
+                    print(optimize_params.to_string(),file=file)
 
 if __name__ == '__main__':
     available_years = get_available_years(DATA_FOLDER)
