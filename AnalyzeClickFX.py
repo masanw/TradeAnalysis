@@ -163,7 +163,7 @@ def get_year_range(min_year, max_year):
     return result["start"], result["end"]
 
 def resample_to_6min(df):
-    df_6min = df.set_index('datetime').resample('6T').agg({
+    df_6min = df.set_index('datetime').resample('6min').agg({
         'bid_open': 'first',
         'bid_high': 'max',
         'bid_low': 'min',
@@ -347,8 +347,8 @@ def create_monthly_line_plots(stats, base_title, filename):
     )
 
     # グラフをHTMLファイルとして保存
-    pio.write_html(fig_mean, f'{filename}_mean.html')
-    pio.write_html(fig_std, f'{filename}_std.html')
+    pio.write_html(fig_mean, f'output/{filename}_mean.html')
+    pio.write_html(fig_std, f'output/{filename}_std.html')
 
 def main():
     # ユーザー入力の取得
@@ -388,9 +388,9 @@ def main():
         # 月ごとの集計（全ての年を含む）
         monthly_stats = calculate_monthly_stats_by_time_frame(trade_data_6min_df)
 
-    create_yearly_line_plots(yearly_stats, 'Average Volatility by Time Frame (Yearly)', 'AverageVolatility_Yearly')
+    create_yearly_line_plots(yearly_stats, 'Average Volatility by Time Frame (Yearly)_{prefix}', 'AverageVolatility_Yearly_{prefix}')
 
-    create_monthly_line_plots(monthly_stats, 'Average Volatility by Time Frame (Monthly)', 'AverageVolatility_Monthly')
+    create_monthly_line_plots(monthly_stats, 'Average Volatility by Time Frame (Monthly)_{prefix}', 'AverageVolatility_Monthly_{prefix}')
 
 if __name__ == '__main__':
     main()
